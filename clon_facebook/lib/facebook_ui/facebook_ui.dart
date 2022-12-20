@@ -1,9 +1,11 @@
-import 'package:clon_facebook/icons/custom_icons_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'widgets/circle_button.dart';
+import 'widgets/what_is_on_your_mind.dart';
+
+import '../icons/custom_icons_icons.dart';
 
 class FacebookUI extends StatelessWidget {
   const FacebookUI({Key? key}) : super(key: key);
@@ -53,6 +55,16 @@ class FacebookUI extends StatelessWidget {
           SizedBox(
             width: 18,
           ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ).copyWith(
+          top: 15,
+        ),
+        children: const [
+          WhatIsOnYourMind(),
         ],
       ),
     );
