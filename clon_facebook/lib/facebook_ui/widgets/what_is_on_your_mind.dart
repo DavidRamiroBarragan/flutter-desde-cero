@@ -14,10 +14,12 @@ class WhatIsOnYourMind extends StatelessWidget {
         SizedBox(
           width: 20,
         ),
-        Text(
-          "What's on your mind, Lisa?",
-          style: TextStyle(
-            color: Colors.grey,
+        Flexible(
+          child: Text(
+            "What's on your mind, Lisa?",
+            style: TextStyle(
+              color: Colors.grey,
+            ),
           ),
         )
       ],

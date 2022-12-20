@@ -1,3 +1,4 @@
+import 'widgets/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -65,6 +66,10 @@ class FacebookUI extends StatelessWidget {
         ),
         children: const [
           WhatIsOnYourMind(),
+          SizedBox(
+            height: 25,
+          ),
+          QuickActions(),
         ],
       ),
     );

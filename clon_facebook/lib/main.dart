@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'facebook_ui/facebook_ui.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(
+    builder: (context) => const MyApp(),
+    enabled: !kReleaseMode,
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -11,8 +15,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: FacebookUI(),
+    return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      home: const FacebookUI(),
     );
   }
 }
