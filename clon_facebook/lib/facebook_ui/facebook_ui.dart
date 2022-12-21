@@ -1,3 +1,8 @@
+import 'package:clon_facebook/facebook_ui/widgets/publication.dart';
+import 'package:clon_facebook/facebook_ui/widgets/stories.dart';
+import 'package:clon_facebook/models/publication.dart';
+import 'package:faker/faker.dart';
+
 import 'widgets/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,11 +13,44 @@ import 'widgets/what_is_on_your_mind.dart';
 
 import '../icons/custom_icons_icons.dart';
 
-class FacebookUI extends StatelessWidget {
+class FacebookUI extends StatefulWidget {
   const FacebookUI({Key? key}) : super(key: key);
 
   @override
+  State<FacebookUI> createState() => _FacebookUIState();
+}
+
+class _FacebookUIState extends State<FacebookUI> {
+
+  final faker = Faker();
+  final List<Publication> publications = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    for (int i = 0; i < 50; i++) {
+      final publication = Publication(
+        user: User(
+          avatar: faker.image.image(),
+          username: faker.person.name(),
+        ),
+        title: faker.lorem.sentence(),
+        commentsCount: faker.randomGenerator.integer(100),
+        reaction: Reaction.values[faker.randomGenerator.integer(
+          Reaction.values.length - 1,
+          min: 0,
+        )],
+        createAt: faker.date.dateTime(),
+        imageUrl: faker.image.image(),
+        shareCount: faker.randomGenerator.integer(100),
+      );
+      publications.add(publication);
+    }
+  }
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -59,17 +97,27 @@ class FacebookUI extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ).copyWith(
-          top: 15,
-        ),
-        children: const [
-          WhatIsOnYourMind(),
-          SizedBox(
+        children: [
+          const WhatIsOnYourMind(),
+          const SizedBox(
             height: 25,
           ),
-          QuickActions(),
+          const QuickActions(),
+          const SizedBox(
+            height: 25,
+          ),
+          const Stories(),
+          const SizedBox(
+            height: 25,
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return PublicationItem(publication: publications[index]);
+            },
+            itemCount: publications.length,
+          )
         ],
       ),
     );
