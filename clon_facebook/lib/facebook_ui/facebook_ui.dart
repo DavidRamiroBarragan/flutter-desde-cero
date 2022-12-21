@@ -1,16 +1,15 @@
-import 'package:clon_facebook/facebook_ui/widgets/publication.dart';
-import 'package:clon_facebook/facebook_ui/widgets/stories.dart';
-import 'package:clon_facebook/models/publication.dart';
 import 'package:faker/faker.dart';
-
-import 'widgets/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'widgets/circle_button.dart';
 import 'widgets/what_is_on_your_mind.dart';
+import 'widgets/stories.dart';
+import 'widgets/publication.dart';
+import 'widgets/quick_actions.dart';
 
+import '../models/publication.dart';
 import '../icons/custom_icons_icons.dart';
 
 class FacebookUI extends StatefulWidget {

@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:clon_facebook/facebook_ui/widgets/avatar.dart';
-import 'package:clon_facebook/models/publication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import 'avatar.dart';
+
+import '../../models/publication.dart';
 
 class PublicationItem extends StatelessWidget {
   final Publication publication;
@@ -35,11 +37,13 @@ class PublicationItem extends StatelessWidget {
     const reactions = Reaction.values;
     return Container(
       decoration: const BoxDecoration(
-          border: Border(
-              top: BorderSide(
-        width: 6,
-        color: Color(0xffEBEBEB),
-      ))),
+        border: Border(
+          top: BorderSide(
+            width: 6,
+            color: Color(0xffEBEBEB),
+          ),
+        ),
+      ),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
