@@ -118,7 +118,7 @@ class PublicationItem extends StatelessWidget {
                               ? Colors.redAccent
                               : Colors.transparent,
                           size: 5,
-                        )
+                        ),
                       ],
                     ),
                   ),
