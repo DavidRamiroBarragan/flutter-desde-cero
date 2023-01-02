@@ -16,7 +16,7 @@ class _TextFieldPageState extends State<TextFieldPage> {
   @override
   void initState() {
     super.initState();
-    _countries = countries.map<Country>((e) => Country.fromJson(e)).toList();
+    _countries = countries.map<Country>((c) => Country.fromJson(c)).toList();
   }
 
   @override
@@ -26,11 +26,7 @@ class _TextFieldPageState extends State<TextFieldPage> {
     if (_query.isEmpty) {
       filteredList = _countries;
     } else {
-      filteredList = _countries
-          .where((element) => element.name.toLowerCase().contains(
-                _query.toLowerCase(),
-              ))
-          .toList();
+      filteredList = _countries.where(finder).toList();
     }
     return Scaffold(
       appBar: AppBar(
@@ -43,17 +39,50 @@ class _TextFieldPageState extends State<TextFieldPage> {
             _query = value;
             setState(() {});
           },
+          decoration: const InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xffd81b60),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xffd81b60),
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.black12,
+              ),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            label: Text('Search...'),
+            hintText: 'Example: Ecuador',
+            hintStyle: TextStyle(
+              color: Colors.black26,
+            ),
+            prefixIcon: Icon(Icons.search_outlined),
+            suffixIcon: Icon(Icons.close),
+
+          ),
         ),
       ),
-      body: ListView.builder(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemBuilder: (_, index) {
-          return ListTile(
-            title: Text(filteredList[index].name),
-          );
-        },
-        itemCount: filteredList.length,
+      body: GestureDetector(
+        child: ListView.builder(
+          // Esconder el teclado cuando hacemos drag sobre la lista
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          itemBuilder: (_, index) {
+            return ListTile(
+              title: Text(filteredList[index].name),
+            );
+          },
+          itemCount: filteredList.length,
+        ),
       ),
     );
   }
+
+  bool finder(c) => c.name.toLowerCase().contains(
+        _query.toLowerCase(),
+      );
 }

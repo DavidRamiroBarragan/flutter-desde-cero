@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formularios/app_routes.dart';
+import 'package:formularios/utils/add_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Esconder el teclado cuando hacemos drag sobre la lista
         final focus = FocusScope.of(context);
         final fChild = focus.focusedChild;
         if (fChild != null && !fChild.hasPrimaryFocus) {
@@ -19,10 +21,8 @@ class MyApp extends StatelessWidget {
         }
       },
       child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        title: 'Inputs',
+        theme: getThemeData(context),
         routes: appRoutes,
         home: const HomePage(),
       ),
