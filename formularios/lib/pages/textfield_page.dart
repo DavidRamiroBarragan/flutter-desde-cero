@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:formularios/utils/capitalize_input_formatter.dart';
 import '../constants/countries.dart';
 import '../models/country.dart';
 
@@ -11,7 +13,7 @@ class TextFieldPage extends StatefulWidget {
 
 class _TextFieldPageState extends State<TextFieldPage> {
   late List<Country> _countries;
-  String _query = '';
+  final _editingController = TextEditingController();
 
   @override
   void initState() {
@@ -20,10 +22,17 @@ class _TextFieldPageState extends State<TextFieldPage> {
   }
 
   @override
+  void dispose() {
+    _editingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     late final List<Country> filteredList;
+    final query = _editingController.text;
 
-    if (_query.isEmpty) {
+    if (query.isEmpty) {
       filteredList = _countries;
     } else {
       filteredList = _countries.where(finder).toList();
@@ -35,35 +44,46 @@ class _TextFieldPageState extends State<TextFieldPage> {
           color: Colors.black,
         ),
         title: TextField(
-          onChanged: (value) {
-            _query = value;
+          controller: _editingController,
+          inputFormatters: [
+            FilteringTextInputFormatter(
+              RegExp(r'^[a-zA-Z\s]*$'),
+              allow: true,
+            ),
+            CapitalizeInputFormatter()
+          ],
+          onChanged: (_) {
             setState(() {});
           },
-          decoration: const InputDecoration(
-            focusedBorder: OutlineInputBorder(
+          decoration: InputDecoration(
+            focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xffd81b60),
               ),
             ),
-            enabledBorder: OutlineInputBorder(
+            enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xffd81b60),
               ),
             ),
-            disabledBorder: OutlineInputBorder(
+            disabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.black12,
               ),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            label: Text('Search...'),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+            label: const Text('Search...'),
             hintText: 'Example: Ecuador',
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: Colors.black26,
             ),
-            prefixIcon: Icon(Icons.search_outlined),
-            suffixIcon: Icon(Icons.close),
-
+            prefixIcon: const Icon(Icons.search_outlined),
+            suffixIcon: IconButton(
+                onPressed: () {
+                  _editingController.text = '';
+                  FocusScope.of(context).unfocus();
+                },
+                icon: const Icon(Icons.close)),
           ),
         ),
       ),
@@ -83,6 +103,6 @@ class _TextFieldPageState extends State<TextFieldPage> {
   }
 
   bool finder(c) => c.name.toLowerCase().contains(
-        _query.toLowerCase(),
+    _editingController.text.toLowerCase(),
       );
 }
