@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formularios/app_routes.dart';
-import 'package:formularios/utils/add_theme.dart';
+import 'package:formularios/utils/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
