@@ -24,5 +24,8 @@ ThemeData getThemeData(BuildContext context) {
         borderRadius: BorderRadius.circular(15.0),
       ),
     ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.all(Colors.indigo)
+    )
   );
 }

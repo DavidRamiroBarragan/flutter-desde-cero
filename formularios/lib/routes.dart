@@ -5,4 +5,5 @@ class Routes {
   static const testField = '/text-field';
   static const keyboardTypes = '/keyboard-type';
   static const checkbox= '/checkbox';
+  static const radioButton= '/radio-button';
 }
