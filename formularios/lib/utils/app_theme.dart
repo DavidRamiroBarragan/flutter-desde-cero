@@ -29,5 +29,11 @@ ThemeData getThemeData(BuildContext context) {
       switchTheme: SwitchThemeData(
         thumbColor: MaterialStateProperty.all(Colors.amber),
         trackColor: MaterialStateProperty.all(Colors.amber),
-      ));
+      ),
+    sliderTheme: const SliderThemeData(
+      activeTrackColor: Colors.pinkAccent,
+      thumbColor: Colors.redAccent,
+      valueIndicatorColor: Colors.green
+    ),
+  );
 }
