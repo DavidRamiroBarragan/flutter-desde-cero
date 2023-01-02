@@ -16,16 +16,18 @@ ThemeData getThemeData(BuildContext context) {
       disabledBorder: OutlineInputBorder(),
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: MaterialStateProperty.all(Colors.white),
-      fillColor: MaterialStateProperty.all(Colors.green),
-      overlayColor:
-          MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.2)),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        checkColor: MaterialStateProperty.all(Colors.white),
+        fillColor: MaterialStateProperty.all(Colors.green),
+        overlayColor:
+            MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.2)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
       ),
-    ),
-    radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.all(Colors.indigo)
-    )
-  );
+      radioTheme:
+          RadioThemeData(fillColor: MaterialStateProperty.all(Colors.indigo)),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.all(Colors.amber),
+        trackColor: MaterialStateProperty.all(Colors.amber),
+      ));
 }

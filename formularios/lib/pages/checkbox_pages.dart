@@ -86,7 +86,27 @@ class _CheckboxPageState extends State<CheckboxPage> {
               MaterialButton(
                 onPressed: _check ? () {} : null,
                 child: const Text('Next'),
-              )
+              ),
+              Switch(
+                value: _check,
+                onChanged: (value) {
+                  setState(() {
+                    _check = value;
+                  });
+                },
+              ),
+              const Divider(),
+              SwitchListTile(
+                inactiveTrackColor: Colors.amber.shade100,
+                inactiveThumbColor: Colors.amber.shade100,
+                title: const Text('Label Switch'),
+                value: _check,
+                onChanged: (value) {
+                  setState(() {
+                    _check = value;
+                  });
+                },
+              ),
             ],
           ),
         ),
