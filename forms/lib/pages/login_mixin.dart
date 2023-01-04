@@ -11,8 +11,17 @@ mixin LoginMixin on State<LoginPage> {
     return isValid ? null : 'Invalid Email';
   }
 
-  String? passwordValidator(value) {
+  String? passwordValidator(String? value) {
     value ??= '';
+    value = value.replaceAll(' ', '');
     return value.length >= 8 ? null : 'Invalid Password';
+  }
+
+  String? checkboxValidator(bool? value){
+    if(value == true){
+      return null;
+    }
+
+    return 'Checkbox required';
   }
 }
