@@ -1,8 +1,13 @@
-
-
+import '../either.dart';
+import '../enums.dart';
 import '../models/user.dart';
 
-abstract class Authenticationrepository {
+abstract class AuthenticationRepository {
   Future<bool> get isSignedIn;
+
   Future<User?> getUserData();
+
+  Future<Either<SignInFailure, User>> singIn(String username, String password);
+
+  Future<void> signOut();
 }
