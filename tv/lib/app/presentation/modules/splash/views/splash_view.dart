@@ -23,13 +23,11 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> _init() async {
-    final connectivityRepository =
-        Provider.of<ConnectivityRepository>(context, listen: false);
+    final ConnectivityRepository connectivityRepository = context.read();
     final hasInternet = await connectivityRepository.hasInternet;
 
     if (hasInternet) {
-      final authRepository =
-          Provider.of<AuthenticationRepository>(context, listen: false);
+        final AuthenticationRepository authRepository = context.read();
       if (await authRepository.isSignedIn) {
         final User? user = await authRepository.getUserData();
         if (mounted) {

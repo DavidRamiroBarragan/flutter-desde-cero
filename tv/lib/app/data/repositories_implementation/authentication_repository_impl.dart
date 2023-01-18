@@ -31,10 +31,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<SignInFailure, User>> singIn(
-      String username, String password) async {
+    String username,
+    String password,
+  ) async {
     final requestTokenResult = await _authenticationApi.createRequestToken();
 
-    return requestTokenResult.when((failure) => Either.left(failure),
+    return requestTokenResult.when((failure) async => Either.left(failure),
         (requestToken) async {
       final loginResult = await _authenticationApi.createSessionWithLogin(
         username: username,
