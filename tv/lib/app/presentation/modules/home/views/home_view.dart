@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../main.dart';
+import '../../../../domain/repositories/authentication_repository.dart';
 import '../../../routes/routes.dart';
 
 class HomeView extends StatelessWidget {
@@ -8,11 +9,13 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authenticationRepository =
+    Provider.of<AuthenticationRepository>(context, listen: false);
     return Scaffold(
       body: Center(
         child: TextButton(
             onPressed: () async {
-              Injector.of(context).authenticationRepository.signOut();
+              authenticationRepository.signOut();
               Navigator.pushReplacementNamed(context, Routes.singIn);
             },
             child: const Text('Sign out')),

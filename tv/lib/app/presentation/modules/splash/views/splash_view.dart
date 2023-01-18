@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../main.dart';
 import '../../../../domain/models/user.dart';
+import '../../../../domain/repositories/authentication_repository.dart';
+import '../../../../domain/repositories/connectivity_repository.dart';
 import '../../../routes/routes.dart';
 
 class SplashView extends StatefulWidget {
@@ -21,12 +23,13 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> _init() async {
-    var injector = Injector.of(context);
-    final connectivityRepository = injector.connectivityRepository;
+    final connectivityRepository =
+        Provider.of<ConnectivityRepository>(context, listen: false);
     final hasInternet = await connectivityRepository.hasInternet;
 
     if (hasInternet) {
-      final authRepository = injector.authenticationRepository;
+      final authRepository =
+          Provider.of<AuthenticationRepository>(context, listen: false);
       if (await authRepository.isSignedIn) {
         final User? user = await authRepository.getUserData();
         if (mounted) {

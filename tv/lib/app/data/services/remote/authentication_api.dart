@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 
 import '../../../domain/either.dart';
 import '../../../domain/enums.dart';
@@ -12,12 +12,13 @@ class AuthenticationApi {
   Future<Either<SignInFailure, String>> createRequestToken() async {
     final result = await _http.request(
       '/authentication/token/new',
+      onSuccess: (responseBody) {
+        final json = responseBody as Map;
+        return json['request_token'] as String;
+      },
     );
 
-    return result.when(_handleFailure, (responseBody) {
-      final body = Map<String, dynamic>.from(jsonDecode(responseBody));
-      return Either.right(body['request_token'] as String);
-    });
+    return result.when(_handleFailure, _handleSuccess);
   }
 
   Future<Either<SignInFailure, String>> createSessionWithLogin({
@@ -26,29 +27,35 @@ class AuthenticationApi {
     required String requestToken,
   }) async {
     final result = await _http.request(
-        '/authentication/token/validate_with_login',
-        httpMethod: HttpMethod.post,
-        body: {
-          'username': username,
-          'password': password,
-          'request_token': requestToken
-        });
+      '/authentication/token/validate_with_login',
+      onSuccess: (responseBody) {
+        final json = responseBody as Map;
+        return json['request_token'] as String;
+      },
+      httpMethod: HttpMethod.post,
+      body: {
+        'username': username,
+        'password': password,
+        'request_token': requestToken
+      },
+    );
 
-    return result.when(_handleFailure, (responseBody) {
-      final body = Map<String, dynamic>.from(jsonDecode(responseBody));
-      return Either.right(body['request_token'] as String);
-    });
+    return result.when(_handleFailure, _handleSuccess);
   }
 
   Future<Either<SignInFailure, String>> createSession(
       String requestToken) async {
-    final result = await _http.request('/authentication/session/new',
-        httpMethod: HttpMethod.post, body: {'request_token': requestToken});
+    final result = await _http.request(
+      '/authentication/session/new',
+      httpMethod: HttpMethod.post,
+      body: {'request_token': requestToken},
+      onSuccess: (responseBody) {
+        final json = responseBody as Map;
+        return json['session_id'] as String;
+      },
+    );
 
-    return result.when(_handleFailure, (responseBody) {
-      final json = Map<String, dynamic>.from(jsonDecode(responseBody));
-      return Either.right(json['session_id'] as String);
-    });
+    return result.when(_handleFailure, _handleSuccess);
   }
 
   Either<SignInFailure, String> _handleFailure(HttpFailure httpFailure) {
@@ -69,4 +76,7 @@ class AuthenticationApi {
 
     return Either.left(SignInFailure.unknown);
   }
+
+  Either<SignInFailure, String> _handleSuccess(String request) =>
+      Either.right(request);
 }
