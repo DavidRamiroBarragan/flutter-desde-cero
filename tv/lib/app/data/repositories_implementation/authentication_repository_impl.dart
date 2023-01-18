@@ -32,35 +32,34 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<Either<SignInFailure, User>> singIn(
       String username, String password) async {
-    final requestToken = await _authenticationApi.createRequestToken();
+    final requestTokenResult = await _authenticationApi.createRequestToken();
 
-    if (requestToken == null) {
-      return Either.left(SignInFailure.unknown);
-    }
+    return requestTokenResult.when((failure) => Either.left(failure),
+        (requestToken) async {
+      final loginResult = await _authenticationApi.createSessionWithLogin(
+        username: username,
+        password: password,
+        requestToken: requestToken,
+      );
 
-    final loginResult = await _authenticationApi.createSessionWithLogin(
-      username: username,
-      password: password,
-      requestToken: requestToken,
-    );
+      return loginResult.when(
+        (failure) async {
+          return Either.left(failure);
+        },
+        (requestToken) async {
+          final sessionResult =
+              await _authenticationApi.createSession(requestToken);
 
-    return loginResult.when(
-      (failure) async {
-        return Either.left(failure);
-      },
-      (requestToken) async {
-        final sessionResult =
-            await _authenticationApi.createSession(requestToken);
-
-        return sessionResult.when(
-          (failure) async => Either.left(failure),
-          (sessionId) async {
-            await _secureStorage.write(key: _key, value: sessionId);
-            return Either.right(User());
-          },
-        );
-      },
-    );
+          return sessionResult.when(
+            (failure) async => Either.left(failure),
+            (sessionId) async {
+              await _secureStorage.write(key: _key, value: sessionId);
+              return Either.right(User());
+            },
+          );
+        },
+      );
+    });
   }
 
   @override
