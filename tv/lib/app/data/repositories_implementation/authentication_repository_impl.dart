@@ -1,27 +1,28 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import '../../domain/either.dart';
 import '../../domain/enums.dart';
 import '../../domain/models/user.dart';
 import '../../domain/repositories/authentication_repository.dart';
+import '../services/local/session_service.dart';
+import '../services/remote/account_api.dart';
 import '../services/remote/authentication_api.dart';
 
-const _key = 'sessionId';
-
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  final FlutterSecureStorage _secureStorage;
   final AuthenticationApi _authenticationApi;
+  final SessionService _sessionService;
+  final AccountApi _accountApi;
 
-  AuthenticationRepositoryImpl(
-    this._secureStorage,
-    this._authenticationApi,
-  );
+  AuthenticationRepositoryImpl({
+    required sessionService,
+    required authenticationApi,
+    required accountApi,
+  })  : _sessionService = sessionService,
+        _authenticationApi = authenticationApi,
+        _accountApi = accountApi;
 
   @override
   Future<bool> get isSignedIn async {
-    final sessionId = await _secureStorage.read(key: _key);
-
-    return sessionId != null;
+    final id = await _sessionService.sessionId;
+    return id != null;
   }
 
   @override
@@ -50,8 +51,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
           return sessionResult.when(
             (failure) async => Either.left(failure),
             (sessionId) async {
-              await _secureStorage.write(key: _key, value: sessionId);
-              return Either.right(User());
+              _sessionService.saveSessionId(sessionId);
+              final user = await _accountApi.getAccount(sessionId);
+
+              if (user == null) {
+                return Either.left(SignInFailure.unknown);
+              }
+              return Either.right(user);
             },
           );
         },
@@ -61,6 +67,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<void> signOut() async {
-    await _secureStorage.delete(key: _key);
+    await _sessionService.signOut();
   }
 }
