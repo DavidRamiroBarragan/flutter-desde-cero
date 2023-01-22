@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../domain/enums.dart';
-import '../../../../domain/repositories/authentication_repository.dart';
 import '../../../routes/routes.dart';
 import '../controller/sign_in_controller.dart';
 
@@ -12,7 +11,7 @@ class SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final signInController = Provider.of<SignInController>(context);
-    if (signInController.fetching) {
+    if (signInController.state.fetching) {
       return const CircularProgressIndicator();
     }
     return MaterialButton(
@@ -30,17 +29,11 @@ class SubmitButton extends StatelessWidget {
 
   Future<void> _submit(BuildContext context) async {
     final SignInController signInController = context.read();
+    final result = await signInController.submit();
 
-    signInController.onFetchingChanged(true);
     if (!signInController.mounted) {
       return;
     }
-    final authenticationRepository =
-        Provider.of<AuthenticationRepository>(context, listen: false);
-    final result = await authenticationRepository.singIn(
-      signInController.username,
-      signInController.password,
-    );
 
     result.when((failure) {
       final message = {
@@ -52,7 +45,6 @@ class SubmitButton extends StatelessWidget {
 
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message!)));
-      signInController.onFetchingChanged(false);
     }, (user) {
       Navigator.pushReplacementNamed(context, Routes.home);
     });
