@@ -6,4 +6,5 @@ class Routes {
   static const splash = '/splash';
   static const singIn = '/sing-in';
   static const home = '/home';
+  static const offline = '/offline';
 }

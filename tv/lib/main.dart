@@ -16,6 +16,7 @@ import 'app/domain/repositories/account_repository.dart';
 import 'app/domain/repositories/authentication_repository.dart';
 import 'app/domain/repositories/connectivity_repository.dart';
 import 'app/my_app.dart';
+import 'app/presentation/controller/session_controller.dart';
 
 void main() {
   final Http http = Http(
@@ -31,7 +32,8 @@ void main() {
   runApp(MultiProvider(
     providers: [
       Provider<AccountRepository>(
-          create: (_) => AccountRepositoryImpl(accountApi, sessionService)),
+        create: (_) => AccountRepositoryImpl(accountApi, sessionService),
+      ),
       Provider<ConnectivityRepository>(
         create: (__) => ConnectivityRepositoryImpl(
           Connectivity(),
@@ -45,6 +47,9 @@ void main() {
           accountApi: accountApi,
         ),
       ),
+      ChangeNotifierProvider<SessionController>(
+        create: (_) => SessionController(),
+      )
     ],
     child: const MyApp(),
   ));

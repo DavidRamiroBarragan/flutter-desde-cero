@@ -30,20 +30,18 @@ class _SplashViewState extends State<SplashView> {
 
     final hasInternet = await connectivityRepository.hasInternet;
 
-    if (hasInternet) {
-      if (await authRepository.isSignedIn) {
-        final User? user = await accountRepository.getUserData();
-        if (mounted) {
-          if (user != null) {
-            _goTo(Routes.home);
-          } else {
-            _goTo(Routes.singIn);
-          }
-        }
-      } else if (mounted) {
-        _goTo(Routes.singIn);
-      }
-    } else {}
+    if (!hasInternet) {
+      return _goTo(Routes.singIn);
+    }
+    final isSignIn = await authRepository.isSignedIn;
+
+    if (!isSignIn) {
+      _goTo(Routes.singIn);
+    }
+
+    final User? user = await accountRepository.getUserData();
+
+    return user == null ? _goTo(Routes.singIn) : _goTo(Routes.home);
   }
 
   void _goTo(String route) {
