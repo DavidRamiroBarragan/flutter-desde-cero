@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../domain/models/user.dart';
+import '../../../../domain/models/user/user.dart';
 import '../../../../domain/repositories/account_repository.dart';
 import '../../../../domain/repositories/authentication_repository.dart';
 import '../../../../domain/repositories/connectivity_repository.dart';
+import '../../../controller/session_controller.dart';
 import '../../../routes/routes.dart';
 
 class SplashView extends StatefulWidget {
@@ -27,6 +28,7 @@ class _SplashViewState extends State<SplashView> {
     final ConnectivityRepository connectivityRepository = context.read();
     final AuthenticationRepository authRepository = context.read();
     final AccountRepository accountRepository = context.read();
+    final SessionController sessionController = context.read();
 
     final hasInternet = await connectivityRepository.hasInternet;
 
@@ -41,7 +43,12 @@ class _SplashViewState extends State<SplashView> {
 
     final User? user = await accountRepository.getUserData();
 
-    return user == null ? _goTo(Routes.singIn) : _goTo(Routes.home);
+    if (user != null) {
+      sessionController.setUser(user);
+      return _goTo(Routes.home);
+    }
+
+    return _goTo(Routes.singIn);
   }
 
   void _goTo(String route) {

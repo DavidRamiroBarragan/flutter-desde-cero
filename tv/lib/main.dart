@@ -48,7 +48,9 @@ void main() {
         ),
       ),
       ChangeNotifierProvider<SessionController>(
-        create: (_) => SessionController(),
+        create: (context) => SessionController(
+          authenticationRepository: context.read(),
+        ),
       )
     ],
     child: const MyApp(),

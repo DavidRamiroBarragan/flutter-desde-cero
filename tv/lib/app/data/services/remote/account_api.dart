@@ -1,4 +1,4 @@
-import '../../../domain/models/user.dart';
+import '../../../domain/models/user/user.dart';
 import '../../http/http.dart';
 
 class AccountApi {
@@ -10,10 +10,7 @@ class AccountApi {
     final result = await _http.request('/account', queryParameters: {
       'session_id': sessionId,
     }, onSuccess: (json) {
-      return User(
-        id: json['id'],
-        username: json['username'],
-      );
+      return User.fromJson(json);
     });
 
     return result.when((_) => null, (user) => user);
