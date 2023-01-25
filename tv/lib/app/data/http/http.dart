@@ -5,12 +5,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
-import '../../domain/either.dart';
+import '../../domain/either/either.dart';
 
 part 'failure.dart';
-
 part 'logs.dart';
-
 part 'parse_response_body.dart';
 
 enum HttpMethod { get, post, patch, delete, put }
@@ -143,7 +141,7 @@ class Http {
       stackTrace = s;
       logs = {
         ...logs,
-        'exception': e.toString(),
+        'exception': e.runtimeType.toString(),
       };
       if (e is SocketException || e is ClientException) {
         logs = {

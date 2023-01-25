@@ -22,8 +22,7 @@ class SignInView extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Form(
               child: Builder(builder: (context) {
-                final signInController =
-                    Provider.of<SignInController>(context, listen: true);
+                final signInController = Provider.of<SignInController>(context);
                 return AbsorbPointer(
                   absorbing: signInController.state.fetching,
                   child: Column(

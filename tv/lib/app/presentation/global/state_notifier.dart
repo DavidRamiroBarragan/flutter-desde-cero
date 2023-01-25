@@ -21,8 +21,11 @@ abstract class StateNotifier<S> extends ChangeNotifier {
     _update(newState, notifier: false);
   }
 
-  void _update(S newState, {bool notifier = true}) {
-    if (_old != newState) {
+  void _update(
+    S newState, {
+    bool notifier = true,
+  }) {
+    if (_state != newState) {
       _old = _state;
       _state = newState;
       if (notifier) {

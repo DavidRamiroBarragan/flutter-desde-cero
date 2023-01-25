@@ -1,3 +1,1 @@
-enum SignInFailure {
-  notFound, unauthorized, unknown, network
-}
+enum TimeWindow { day, week }

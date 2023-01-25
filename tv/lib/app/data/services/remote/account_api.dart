@@ -13,6 +13,6 @@ class AccountApi {
       return User.fromJson(json);
     });
 
-    return result.when((_) => null, (user) => user);
+    return result.when(left: (_) => null, right: (user) => user);
   }
 }

@@ -1,7 +1,5 @@
-
-
-import '../../../domain/either.dart';
-import '../../../domain/enums.dart';
+import '../../../domain/either/either.dart';
+import '../../../domain/failures/sign_in/sign_in_failures.dart';
 import '../../http/http.dart';
 
 class AuthenticationApi {
@@ -18,7 +16,7 @@ class AuthenticationApi {
       },
     );
 
-    return result.when(_handleFailure, _handleSuccess);
+    return result.when(left: _handleFailure, right: _handleSuccess);
   }
 
   Future<Either<SignInFailure, String>> createSessionWithLogin({
@@ -40,7 +38,7 @@ class AuthenticationApi {
       },
     );
 
-    return result.when(_handleFailure, _handleSuccess);
+    return result.when(left: _handleFailure, right: _handleSuccess);
   }
 
   Future<Either<SignInFailure, String>> createSession(
@@ -55,26 +53,30 @@ class AuthenticationApi {
       },
     );
 
-    return result.when(_handleFailure, _handleSuccess);
+    return result.when(left: _handleFailure, right: _handleSuccess);
   }
 
   Either<SignInFailure, String> _handleFailure(HttpFailure httpFailure) {
     if (httpFailure.statusCode != null) {
       switch (httpFailure.statusCode!) {
         case 401:
-          return Either.left(SignInFailure.unauthorized);
+          if (httpFailure.data is Map &&
+              (httpFailure.data as Map)['status_code'] == 32) {
+            return Either.left(SignInFailure.notVerified());
+          }
+          return Either.left(SignInFailure.unauthorized());
         case 404:
-          return Either.left(SignInFailure.notFound);
+          return Either.left(SignInFailure.notFound());
         default:
-          return Either.left(SignInFailure.unknown);
+          return Either.left(SignInFailure.unknown());
       }
     }
 
     if (httpFailure.exception is NetworkException) {
-      return Either.left(SignInFailure.network);
+      return Either.left(SignInFailure.network());
     }
 
-    return Either.left(SignInFailure.unknown);
+    return Either.left(SignInFailure.unknown());
   }
 
   Either<SignInFailure, String> _handleSuccess(String request) =>
