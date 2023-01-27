@@ -5,6 +5,13 @@ import '../../typedefs.dart';
 part 'media.freezed.dart';
 part 'media.g.dart';
 
+enum MediaType {
+  @JsonValue('movie')
+  movie,
+  @JsonValue('tv')
+  tv
+}
+
 @freezed
 class Media with _$Media {
   factory Media({
@@ -26,7 +33,7 @@ class Media with _$Media {
     @JsonKey(name: 'vote_average')
         required double voteAverage,
     @JsonKey(name: 'media_type')
-        required String type,
+        required MediaType type,
   }) = _Media;
 
   factory Media.fromJson(Json json) => _$MediaFromJson(json);
@@ -38,4 +45,16 @@ Object? readTitleValue(Map map, String _) {
 
 Object? readOriginaTitleValue(Map map, String _) {
   return map['original_title'] ?? map['original_name'];
+}
+
+getMediaList(List list) {
+  return list
+      .where(
+        (element) =>
+            element['media_type'] != 'person' &&
+            element['poster_path'] != null &&
+            element['backdrop_path'] != null,
+      )
+      .map((e) => Media.fromJson(e))
+      .toList();
 }

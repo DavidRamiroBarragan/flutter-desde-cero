@@ -7,6 +7,7 @@ import '../../../../domain/failures/http_request/http_request_failure.dart';
 import '../../../../domain/models/media/media.dart';
 import '../../../../domain/repositories/trending_repository.dart';
 import 'trending_tile.dart';
+import 'trending_time_window.dart';
 
 typedef EitherListMedia = Either<HttpRequestFailure, List<Media>>;
 
@@ -18,13 +19,21 @@ class TrendingList extends StatefulWidget {
 }
 
 class _TrendingListState extends State<TrendingList> {
-  late final Future<EitherListMedia> _future;
+  TrendingRepository get _trendingRepository => context.read();
+  late Future<EitherListMedia> _future;
+  TimeWindow _timeWindow = TimeWindow.day;
 
   @override
   void initState() {
-    final TrendingRepository trendingRepository = context.read();
     super.initState();
-    _future = trendingRepository.getMoviesAndSeries(TimeWindow.week);
+    _future = _trendingRepository.getMoviesAndSeries(_timeWindow);
+  }
+
+  void onChanged(TimeWindow timeWindow) {
+    setState(() {
+      _timeWindow = timeWindow;
+      _future = _trendingRepository.getMoviesAndSeries(_timeWindow);
+    });
   }
 
   @override
@@ -32,13 +41,7 @@ class _TrendingListState extends State<TrendingList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15.0),
-          child: Text(
-            'TRENDING',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
+        TrendingTimeWindow(timeWindow: _timeWindow, onChanged: onChanged),
         const SizedBox(
           height: 10,
         ),
@@ -49,6 +52,7 @@ class _TrendingListState extends State<TrendingList> {
               final width = constraints.maxHeight * 0.65;
               return Center(
                 child: FutureBuilder<EitherListMedia>(
+                  key: ValueKey(_future),
                   future: _future,
                   builder: (_, snapshot) {
                     if (!snapshot.hasData) {
